@@ -1,15 +1,19 @@
 package com.stackroute.recommendation.service;
+
 import com.stackroute.recommendation.model.Question;
-import  com.stackroute.recommendation.repository.*;
 import com.stackroute.recommendation.model.QuestionTagInfo;
+import com.stackroute.recommendation.repository.QuestionTagRepository;
+import com.stackroute.recommendation.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+//Beginner
+//        Intermediate
+//        Advanced
 
 @Service
 public class QuestionTagInfoService {
@@ -18,6 +22,11 @@ public class QuestionTagInfoService {
     @Autowired
     UserRepository questionRepository;
 
+    public void saveQuestion(Question qs){
+        System.out.println(qs.getQuestionId()+qs.getQuestionTitle()+qs.getDifficulty()+qs.getTags());
+       questionRepository.saveQuestion(qs.getQuestionId(),qs.getQuestionTitle(),qs.getDifficulty(),qs.getTags());
+       questionRepository.mapOntology(qs.getQuestionId());
+    }
     public QuestionTagInfo copyTag(QuestionTagInfo qt){
         QuestionTagInfo qt1=new QuestionTagInfo();
         qt1.set_id(qt.get_id());
@@ -100,11 +109,14 @@ public class QuestionTagInfoService {
             if(easy>=medium&&easy>=hard) {
                 int t = 0;
 
-                    randomQuestion = questionRepository.getQuestionByTag(tagList.get(index).getTagName(), "easy",uname);
-                    if (randomQuestion != null)
+                    randomQuestion = questionRepository.getQuestionByTag(tagList.get(index).getTagName(), "Beginner",uname);
+//                    System.out.println(randomQuestion.getQuestionTitle()+randomQuestion);
+                    if (randomQuestion != null){
                              questionList.add(randomQuestion);
+                        System.out.println(randomQuestion.getQuestionTitle());
+                    }
 
-                randomQuestion = questionRepository.getQuestionByTag(tagList.get(index).getTagName(), "medium",uname);
+                randomQuestion = questionRepository.getQuestionByTag(tagList.get(index).getTagName(), "Intermediate",uname);
                     if (randomQuestion != null)
                         questionList.add(randomQuestion);
 
@@ -113,21 +125,21 @@ public class QuestionTagInfoService {
             else if(medium>=easy&&medium>=hard){
 
 
-                    randomQuestion = questionRepository.getQuestionByTag(tagList.get(index).getTagName(), "medium",uname);
+                    randomQuestion = questionRepository.getQuestionByTag(tagList.get(index).getTagName(), "Intermediate",uname);
                     if (randomQuestion != null)
                          questionList.add(randomQuestion);
 
-                randomQuestion = questionRepository.getQuestionByTag(tagList.get(index).getTagName(), "hard",uname);
+                randomQuestion = questionRepository.getQuestionByTag(tagList.get(index).getTagName(), "Advanced",uname);
                     if (randomQuestion != null)
                          questionList.add(randomQuestion);
 
 
                                              }
             else{
-                   randomQuestion = questionRepository.getQuestionByTag(tagList.get(index).getTagName(), "hard",uname);
+                   randomQuestion = questionRepository.getQuestionByTag(tagList.get(index).getTagName(), "Advanced",uname);
                     if (randomQuestion != null)
                      questionList.add(randomQuestion);
-                  randomQuestion = questionRepository.getQuestionByTag(tagList.get(index).getTagName(), "hard",uname);
+                  randomQuestion = questionRepository.getQuestionByTag(tagList.get(index).getTagName(), "Advanced",uname);
                     if (randomQuestion != null)
                         questionList.add(randomQuestion);
 
@@ -141,7 +153,7 @@ public class QuestionTagInfoService {
 
     }
 
-    public int  questionInList(Question randomQuestion,List<Question>questionList){
+    public int  questionInList(Question randomQuestion, List<Question>questionList){
       int m=0;
         for(Question qt:questionList){
             if(qt.getId()==randomQuestion.getId()){
@@ -152,11 +164,11 @@ public class QuestionTagInfoService {
 
     }
 
-    public void setLevelVal(Double maxscore,Double score,String abc,String currentlevel,QuestionTagInfo questionTagInfo){
+    public void setLevelVal(Double maxscore, Double score, String abc, String currentlevel, QuestionTagInfo questionTagInfo){
 
-        if(currentlevel.toString().equals("medium"))
+        if(currentlevel.toString().equals("Intermediate"))
             score=score/2;
-        if (currentlevel.toString().equals("hard"))
+        if (currentlevel.toString().equals("Advanced"))
             score=score/3;
 
         String arr[]=abc.split( "[:\"]");
@@ -173,14 +185,14 @@ public class QuestionTagInfoService {
         {   maxscore=score;
             if(score==9||score==10)
             {
-                if(currentlevel.toString().equals("easy"))
+                if(currentlevel.toString().equals("Beginner"))
                 {
                     medium++;
                     if(easy>=1)
                     easy--;
 
                 }
-                else if(currentlevel.toString().equals("medium"))
+                else if(currentlevel.toString().equals("Intermediate"))
                 {   if(easy>=1)
                     easy--;
                     hard++;
@@ -196,12 +208,12 @@ public class QuestionTagInfoService {
             {
                 if(hard>=1)
                     hard--;
-                if(currentlevel.toString().equals("medium"))
+                if(currentlevel.toString().equals("Intermediate"))
                 {
                     easy++;
 
                 }
-                else if(currentlevel.toString().equals("easy"))
+                else if(currentlevel.toString().equals("Beginner"))
                 {
                     easy++;
 
@@ -214,13 +226,13 @@ public class QuestionTagInfoService {
             }
             else
             {
-                if(currentlevel.toString().equals("medium"))
+                if(currentlevel.toString().equals("Intermediate"))
                 {
                     medium++;
                     if(easy>=1)
                     easy--;
                 }
-                else if(currentlevel.toString().equals("easy"))
+                else if(currentlevel.toString().equals("Beginner"))
                 {
                     easy++;
                     if(hard>=1)
@@ -266,9 +278,9 @@ public class QuestionTagInfoService {
                   setLevelVal(maxscore, score, tagInfo.getRatio(), q1.getDifficulty(), tagInfo);
                   tagInfo.setTotalQuestions(tagInfo.getTotalQuestions() + 1);
                   if (maxscore == 0.0) {
-                      if (q1.getDifficulty().toString().equals("easy")) {
+                      if (q1.getDifficulty().toString().equals("Beginner")) {
                           tagInfo.setTotalEasyPoints(tagInfo.getTotalEasyPoints() + score);
-                      } else if (q1.getDifficulty().toString().equals("medium")) {
+                      } else if (q1.getDifficulty().toString().equals("Intermediate")) {
 
                           tagInfo.setTotalMediumPoints(tagInfo.getTotalEasyPoints() + score);
                       } else {
@@ -294,10 +306,10 @@ public class QuestionTagInfoService {
                         tagInfo2.setUsername(username);
                             tagInfo2.setTagName(q1.getTags());
                             tagInfo2.setRatio("10:10:10");
-                            if(q1.getDifficulty().toString().equals("easy")){
+                            if(q1.getDifficulty().toString().equals("Beginner")){
                                 tagInfo2.setTotalEasyPoints(score);
                             }
-                            else if(q1.getDifficulty().toString().equals("medium")){
+                            else if(q1.getDifficulty().toString().equals("Intermediate")){
                                 tagInfo2.setTotalMediumPoints(score);
                             }
                             else{
@@ -319,10 +331,10 @@ public class QuestionTagInfoService {
                         tagInfo2.setTotalQuestions(tagInfo2.getTotalQuestions()+1);
                         tagInfo2.setDate(new Date());
                         if(maxscore==0.0){
-                        if(q1.getDifficulty().toString().equals("easy")){
+                        if(q1.getDifficulty().toString().equals("Beginner")){
                             tagInfo2.setTotalEasyPoints(tagInfo2.getTotalEasyPoints()+score);
                                                      }
-                        else if(q1.getDifficulty().toString().equals("medium")){
+                        else if(q1.getDifficulty().toString().equals("Intermediate")){
                             tagInfo2.setTotalMediumPoints(tagInfo2.getTotalEasyPoints()+score);
                         }
                         else{

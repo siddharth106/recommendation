@@ -1,14 +1,13 @@
 package com.stackroute.recommendation.service;
 
 import com.stackroute.recommendation.model.Question;
-import com.stackroute.recommendation.model.SubmissionScoreDetails;
 import com.stackroute.recommendation.model.User;
+import com.stackroute.recommendation.repository.QuestionTagRepository;
 import com.stackroute.recommendation.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -17,6 +16,8 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private QuestionTagRepository tagRepository;
 
 
 //    public void  Question saveQuestion(Question question){
@@ -27,8 +28,11 @@ public class UserService {
     public User createUserNode(User user){
         return userRepository.save(user);
     }
-    public User  deleteUser(User user){
-          userRepository.delete(user);
+    public User deleteUser(User user){
+        System.out.println(user.getUsername());
+              tagRepository.deleteAllByUsername(user.getUsername());
+        //tagRepository.
+          userRepository.delete(user.getUsername());
 
         return null;                  }
 

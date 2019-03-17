@@ -10,10 +10,8 @@ public class Question {
 
     @GraphId
     private Long id;
-
     private String questionId;
     private String questionTitle;
-    private String questionDescription;
     private String difficulty;
     private String tags;
 
@@ -62,12 +60,5 @@ public class Question {
     }
 
 
-    public String getQuestionDescription() {
-        return questionDescription;
-    }
-
-    public void setQuestionDescription(String questionDescription) {
-        this.questionDescription = questionDescription;
-    }
 
 }

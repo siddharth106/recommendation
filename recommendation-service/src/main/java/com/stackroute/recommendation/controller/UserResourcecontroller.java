@@ -3,7 +3,6 @@ package com.stackroute.recommendation.controller;
 
 import com.stackroute.recommendation.model.Question;
 import com.stackroute.recommendation.model.SubmissionDetails;
-import com.stackroute.recommendation.model.SubmissionScoreDetails;
 import com.stackroute.recommendation.model.User;
 import com.stackroute.recommendation.service.QuestionTagInfoService;
 import com.stackroute.recommendation.service.UserService;
@@ -31,7 +30,7 @@ public class UserResourcecontroller {
 
     @PostMapping(value = "submission")
     public void submissiontagChanges(@RequestBody SubmissionDetails submissionDetails) {
-       //System.out.println(submissionDetails.getQuestionId());
+       System.out.println(submissionDetails.getQuestionId());
         if(submissionDetails==null||submissionDetails.getScore()==null||submissionDetails.getUsername()==null)
             return ;
         System.out.println(submissionDetails.getQuestionId()+submissionDetails.getUsername()+submissionDetails.getScore());
@@ -39,11 +38,18 @@ public class UserResourcecontroller {
 
     }
 
+    @PostMapping(value = "saveQuestion")
+    public void postQuestions(@RequestBody Question question) {
+              tagInfoService.saveQuestion(question);
+
+
+    }
 
     @GetMapping(value = "userQuestions")
     public List<Question> getUserQuestions(@RequestBody User user) {
         if(user==null||user.getUsername()==null)
             return null;
+
         return tagInfoService.getUserQuestions(user.getUsername());
     }
 
@@ -54,7 +60,6 @@ public class UserResourcecontroller {
            return null;
          ResponseEntity responseEntity;
          userService.deleteUser(user);
-
          responseEntity = new ResponseEntity<User>(user, HttpStatus.CREATED);
 
          return responseEntity;
@@ -73,18 +78,19 @@ public class UserResourcecontroller {
         return responseEntity;
     }
 
-    @PostMapping(value="saveQuestions")
-    public ResponseEntity<?> saveUser(@RequestBody Question question) {
-        if(question==null||question.getQuestionId()==null)
+    @PostMapping(value = "addInterests")
+    public ResponseEntity<?> addInterest(@RequestBody User user) {
+        if(user==null||user.getUsername()==null||user.getTags()==null)
             return null;
         ResponseEntity responseEntity;
-         userService.
-         userService.createUserNode(user);
-        tagInfoService.addTags(user.getTags(),user.getUsername());
-        responseEntity = new ResponseEntity<User>(user1, HttpStatus.CREATED);
+         tagInfoService.addTags(user.getTags(),user.getUsername());
+        responseEntity = new ResponseEntity<User>(user, HttpStatus.CREATED);
 
         return responseEntity;
     }
+
+
+
 
     @GetMapping(value = "practiceQuestions")
     public List<Question> getAllQuestions() {

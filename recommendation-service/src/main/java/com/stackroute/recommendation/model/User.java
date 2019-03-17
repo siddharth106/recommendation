@@ -3,8 +3,6 @@ package com.stackroute.recommendation.model;
 import org.neo4j.ogm.annotation.GraphId;
 import org.neo4j.ogm.annotation.NodeEntity;
 
-import java.util.List;
-
 @NodeEntity
 public class User {
 
@@ -20,9 +18,6 @@ public class User {
     public void setTags(String[] tags) {
         this.tags = tags;
     }
-
-
-
 
     public String getUsername() {
         return username;

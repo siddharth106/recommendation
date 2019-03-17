@@ -1,17 +1,17 @@
 package com.stackroute.recommendation.model;
 
 public class SubmissionDetails {
-    String questionId;
-    Double score;
+    private String questionId;
+    private Double score;
+    private String username;
 
     public String getQuestionId() {
         return questionId;
     }
 
     public void setQuestionId(String questionId) {
-        questionId = this.questionId;
+        this.questionId = questionId;
     }
-
     public Double getScore() {
         return score;
     }
@@ -27,6 +27,4 @@ public class SubmissionDetails {
     public void setUsername(String username) {
         this.username = username;
     }
-
-    String username;
 }
